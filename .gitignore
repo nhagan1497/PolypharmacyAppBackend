@@ -3,7 +3,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-.azure_cred
+.cred/
 azure_deployment.sh
 
 # C extensions
@@ -162,3 +162,5 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+/firebase_service_cred.json
+/firebase_service_cred.json

@@ -3,3 +3,4 @@ uvicorn
 gunicorn
 jinja2
 python-multipart
+firebase-admin
