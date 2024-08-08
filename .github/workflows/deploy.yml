@@ -14,7 +14,9 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Zip the application files
-      run: zip -r zipfile.zip . -x '.??*'
+      run: |
+        echo "$FIREBASE_SERVICE_CRED" > firebase_service_cred.json
+        zip -r zipfile.zip . -x '.??*'
 
     - name: Azure Login
       uses: azure/login@v1
@@ -29,4 +31,6 @@ jobs:
         package: zipfile.zip
 
     - name: Clean up
-      run: rm zipfile.zip
+      run: |
+        rm zipfile.zip
+        rm firebase_service_cred.json
