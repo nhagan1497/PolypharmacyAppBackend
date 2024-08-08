@@ -1,0 +1,32 @@
+name: Deploy to Azure
+
+on:
+  push:
+    branches:
+      - main  # Change this to your deployment branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Zip the application files
+      run: zip -r zipfile.zip . -x '.??*'
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.APP_SERVICE_NAME }}
+        slot-name: 'production'
+        package: zipfile.zip
+
+    - name: Clean up
+      run: rm zipfile.zip
