@@ -1,6 +1,6 @@
 import time
 from cachetools import TTLCache, cached
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import Depends, FastAPI, Header, HTTPException, status
 from firebase_admin import auth
 
 import firebase_setup
@@ -22,14 +22,15 @@ def verify_token_cached(id_token: str):
         )
 
 
-def verify_token(auth_header: str):
-    if not auth_header.startswith("Bearer "):
+def verify_token(auth_header: str = Header(None)):
+    if not auth_header or not auth_header.startswith("Bearer "):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication header",
         )
     id_token = auth_header.split("Bearer ")[1]
     return verify_token_cached(id_token)
+
 
 @app.get("/secure-data")
 async def secure_data(user_data: dict = Depends(verify_token)):
@@ -39,5 +40,6 @@ async def secure_data(user_data: dict = Depends(verify_token)):
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
+
 
 # User ID LOfI6oxL2pNmwAm9tJ1aFDgRw0w2

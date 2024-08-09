@@ -1,6 +1,7 @@
-fastapi
+fastapi~=0.112.0
 uvicorn
 gunicorn
 jinja2
 python-multipart
 firebase-admin
+cachetools~=5.4.0
