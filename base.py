@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import os
 
-SQLALCHEMY_DATABASE_URL = os.getenv("AZURE_DATABASE_URL")
+SQLALCHEMY_DATABASE_URL = os.getenv("SQL_CONNECTION_STRING")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 

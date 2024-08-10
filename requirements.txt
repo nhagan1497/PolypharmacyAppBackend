@@ -5,4 +5,7 @@ jinja2
 python-multipart
 firebase-admin
 cachetools~=5.4.0
-sqlalchemy
+sqlalchemy~=2.0.32
+pyodbc
+pydantic~=2.8.2
+requests~=2.32.3
