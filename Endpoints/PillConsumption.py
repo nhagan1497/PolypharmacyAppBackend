@@ -8,6 +8,8 @@ import Crud.PillConsumption as PillConsumptionCrud
 import Schema.PillConsumption as PillConsumptionSchema
 import Models.PillConsumption as PillConsumptionModel
 
+import Schema.Pill as PillSchema
+
 pill_consumption_router = APIRouter()
 
 
@@ -44,3 +46,12 @@ def delete_pill_consumption(pill_consumption_id: int, db: Session = Depends(get_
     if db_pill_consumption is None:
         raise HTTPException(status_code=404, detail="Pill consumption not found")
     return db_pill_consumption
+
+
+@pill_consumption_router.get("/pill_consumption_details/", response_model=list[tuple[PillConsumptionSchema.PillConsumption, PillSchema.Pill]])
+def read_pill_consumption_details(db: Session = Depends(get_db), user_id=Depends(auth.get_uid)):
+    db_pill_consumption_details = PillConsumptionCrud.get_pill_consumption_details(db=db, user_id=user_id)
+    if db_pill_consumption_details is None:
+        raise HTTPException(status_code=404, detail="Pill consumption not found")
+
+    return [(consumption, pill) for consumption, pill in db_pill_consumption_details]
