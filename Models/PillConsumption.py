@@ -10,7 +10,7 @@ class PillConsumption(Base):
     pill_id = Column(Integer)
     quantity = Column(Integer)
     time = Column(DateTime, default=func.now())
-    user_id = Column(Integer)
+    user_id = Column(String)
 
 
 Base.metadata.create_all(bind=engine)

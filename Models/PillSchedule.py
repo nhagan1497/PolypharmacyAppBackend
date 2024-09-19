@@ -9,7 +9,7 @@ class PillSchedule(Base):
     pill_id = Column(Integer)
     quantity = Column(Integer)
     time = Column(Time)
-    user_id = Column(Integer)
+    user_id = Column(String)
 
 
 Base.metadata.create_all(bind=engine)
