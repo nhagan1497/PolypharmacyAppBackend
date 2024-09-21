@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+import io
+from PIL import Image
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 from sqlalchemy.orm import Session
 from base import get_db
 
@@ -9,6 +11,8 @@ import Schema.PillSchedule as PillScheduleSchema
 import Models.PillSchedule as PillScheduleModel
 
 import Schema.Pill as PillSchema
+
+from MachineVision.ImagePredict import identify_pills
 
 pill_schedule_router = APIRouter()
 
@@ -55,3 +59,18 @@ def read_pill_consumption_details(db: Session = Depends(get_db), user_id=Depends
         raise HTTPException(status_code=404, detail="Pill consumption not found")
 
     return [(consumption, pill) for consumption, pill in db_pill_consumption_details]
+
+
+@pill_schedule_router.post('/identify/', response_model=list[PillSchema.Pill])
+async def identify_multiple_pills_image(image: UploadFile, db=Depends(get_db), user_id=Depends(auth.get_uid)):
+    if not image.content_type.startswith("image/"):
+        raise HTTPException(status_code=400, detail="Uploaded file is not an image")
+    image_data = await image.read()
+    try:
+        # Optional: You can validate the image content here (e.g., using PIL)
+        img = Image.open(io.BytesIO(image_data))
+        img.verify()  # Ensure it's a valid image
+    except Exception as e:
+        raise HTTPException(status_code=400, detail="Invalid image file")
+
+    return identify_pills(db, user_id, img)
