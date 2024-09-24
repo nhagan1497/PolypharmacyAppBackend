@@ -27,7 +27,7 @@ def read_pill_consumption(pill_consumption_id: int, db: Session = Depends(get_db
 
 
 @pill_consumption_router.get("/", response_model=list[PillConsumptionSchema.PillConsumption])
-def read_pill_consumptions(skip: int = 0, limit: int = 10, db: Session = Depends(get_db), user_id=Depends(auth.get_uid)):
+def read_pill_consumptions(skip: int = None, limit: int = None, db: Session = Depends(get_db), user_id=Depends(auth.get_uid)):
     pill_consumptions = PillConsumptionCrud.get_pill_consumptions(db=db, skip=skip, limit=limit, user_id=user_id)
     return pill_consumptions
 
