@@ -28,9 +28,13 @@ def get_pill_by_name(db: Session, name: str, user_id: str = None):
 
 
 def get_pills(db: Session, skip: int = 0, limit: int = 10, user_id: str = None):
-    return db.query(PillDB).filter(
+    query_result = db.query(PillDB).filter(
         (PillDB.user_id == user_id) | (PillDB.user_id == None)
-    ).order_by(PillDB.id).offset(skip).limit(limit).all()
+    )
+
+    if skip and limit:
+        query_result = query_result.order_by(PillDB.id).offset(skip).limit(limit)
+    return query_result.all()
 
 
 def update_pill(db: Session, pill_id: int, pill_update: PillUpdate, user_id: str):

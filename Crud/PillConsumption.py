@@ -20,8 +20,10 @@ def get_pill_consumption(db: Session, pill_consumption_id: int, user_id: str = N
 
 
 def get_pill_consumptions(db: Session, skip: int = 0, limit: int = 10, user_id: str = None):
-    return (db.query(PillConsumptionDB).filter(PillConsumptionDB.user_id == user_id).
-            order_by(PillConsumptionDB.id).offset(skip).limit(limit).all())
+    query_result = db.query(PillConsumptionDB).filter(PillConsumptionDB.user_id == user_id)
+    if skip and limit:
+        query_result = query_result.order_by(PillConsumptionDB.id).offset(skip).limit(limit)
+    return query_result.all()
 
 
 def get_pill_consumption_details(db: Session, user_id: str):

@@ -20,8 +20,10 @@ def get_pill_schedule(db: Session, pill_schedule_id: int, user_id: str = None):
 
 
 def get_pill_schedules(db: Session, skip: int = 0, limit: int = 10, user_id: str = None):
-    return (db.query(PillScheduleDB).filter(PillScheduleDB.user_id == user_id).
-            order_by(PillScheduleDB.id).offset(skip).limit(limit).all())
+    query_result = db.query(PillScheduleDB).filter(PillScheduleDB.user_id == user_id)
+    if skip and limit:
+        query_result = query_result.order_by(PillScheduleDB.id).offset(skip).limit(limit)
+    return query_result.all()
 
 
 def get_pill_schedule_details(db: Session, user_id: str):

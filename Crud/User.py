@@ -16,7 +16,10 @@ def get_user(db: Session, user_id: str):
 
 
 def get_users(db: Session, skip: int = 0, limit: int = 10, user_id: str = None):
-    return db.query(UserDB).filter(UserDB.user_id == user_id).order_by(UserDB.uid).offset(skip).limit(limit).all()
+    query_result = db.query(UserDB).filter(UserDB.user_id == user_id)
+    if skip and limit:
+        query_result = query_result.order_by(UserDB.uid).offset(skip).limit(limit)
+    return query_result.all()
 
 
 def update_user(db: Session, user_id: str, user_update: UserUpdate):
