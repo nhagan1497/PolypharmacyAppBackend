@@ -66,4 +66,6 @@ def get_remaining_pill_count(db: Session, pill_id: int, user_id: str):
     total_count = db.query(func.sum(PillConsumptionDB.quantity)).filter(
         PillConsumptionDB.user_id == user_id, PillConsumptionDB.pill_id == pill_id
     ).scalar()
+    if total_count is None:
+        total_count = 0
     return total_count * -1
