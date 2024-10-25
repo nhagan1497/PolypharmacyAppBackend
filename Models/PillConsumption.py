@@ -11,6 +11,3 @@ class PillConsumption(Base):
     quantity = Column(Integer)
     time = Column(DateTime, default=func.now())
     user_id = Column(String)
-
-
-Base.metadata.create_all(bind=engine)

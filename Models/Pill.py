@@ -10,7 +10,3 @@ class Pill(Base):
     dosage = Column(String)
     manufacturer = Column(String)
     user_id = Column(String)
-
-
-Base.metadata.create_all(bind=engine)
-
