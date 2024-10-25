@@ -55,3 +55,9 @@ def read_pill_consumption_details(db: Session = Depends(get_db), user_id=Depends
         raise HTTPException(status_code=404, detail="Pill consumption not found")
 
     return [(consumption, pill) for consumption, pill in db_pill_consumption_details]
+
+
+@pill_consumption_router.get("/remaining_pill_count/{pill_id}")
+def get_remaining_pill_count(pill_id: int, db: Session = Depends(get_db), user_id=Depends(auth.get_uid)):
+    pill_count = PillConsumptionCrud.get_remaining_pill_count(db, pill_id, user_id)
+    return {"remaining_pill_count": pill_count}
