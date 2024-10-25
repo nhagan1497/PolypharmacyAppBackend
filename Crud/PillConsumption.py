@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from Models.PillConsumption import PillConsumption as PillConsumptionDB
 from Schema.PillConsumption import PillConsumptionCreate, PillConsumptionUpdate
 from Models.Pill import Pill as PillDB
@@ -59,3 +60,10 @@ def delete_pill_consumption(db: Session, pill_consumption_id: int, user_id: str 
     db.delete(db_pill_consumption)
     db.commit()
     return db_pill_consumption
+
+
+def get_remaining_pill_count(db: Session, pill_id: int, user_id: str):
+    total_count = db.query(func.sum(PillConsumptionDB.quantity)).filter(
+        PillConsumptionDB.user_id == user_id, PillConsumptionDB.pill_id == pill_id
+    ).scalar()
+    return total_count * -1
