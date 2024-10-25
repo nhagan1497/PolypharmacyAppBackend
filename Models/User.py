@@ -7,6 +7,3 @@ class User(Base):
 
     uid = Column(String, primary_key=True, index=True)
     name = Column(String)
-
-
-Base.metadata.create_all(bind=engine)
