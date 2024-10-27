@@ -166,3 +166,4 @@ cython_debug/
 
 /firebase_service_cred.json
 /get_id_token.py
+user_data.db

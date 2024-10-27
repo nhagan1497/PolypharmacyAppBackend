@@ -1,6 +1,6 @@
 from fastapi import FastAPI, BackgroundTasks
 from fastapi import Depends
-from apscheduler.schedulers.background import BackgroundScheduler
+# from apscheduler.schedulers.background import BackgroundScheduler
 
 import auth
 
@@ -13,14 +13,14 @@ from base import initialize_database, db_heartbeat_task
 
 app = FastAPI()
 
-scheduler = BackgroundScheduler()
-scheduler.add_job(db_heartbeat_task, 'interval', minutes=10)
+# scheduler = BackgroundScheduler()
+# scheduler.add_job(db_heartbeat_task, 'interval', minutes=10)
 
 
 @app.on_event("startup")
 async def startup_event():
     initialize_database()
-    scheduler.start()
+    # scheduler.start()
 
 
 app.include_router(Pill.pill_router, prefix="/pills", tags=["pills"])

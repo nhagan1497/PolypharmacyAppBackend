@@ -15,6 +15,10 @@ Base = declarative_base()
 
 @retry(stop=stop_after_attempt(10), wait=wait_exponential(multiplier=1, min=5, max=60))
 def initialize_database():
+    if 'sqlite' in os.environ.get('SQL_CONNECTION_STRING'):
+        db_path = os.environ.get('SQL_CONNECTION_STRING').replace('sqlite:///', '')
+        if not os.path.exists(db_path):
+            open(db_path, 'a').close()
     Base.metadata.create_all(bind=engine)
 
 
