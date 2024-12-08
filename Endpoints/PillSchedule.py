@@ -69,7 +69,6 @@ async def identify_multiple_pills_image(image: UploadFile, db=Depends(get_db), u
     try:
         # Optional: You can validate the image content here (e.g., using PIL)
         img = Image.open(io.BytesIO(image_data))
-        img.verify()  # Ensure it's a valid image
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid image file")
 

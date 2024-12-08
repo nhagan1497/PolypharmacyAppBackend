@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float
+from sqlalchemy import Column, Integer, String, Float, JSON
 from base import Base, engine
 
 
@@ -10,3 +10,5 @@ class Pill(Base):
     dosage = Column(String)
     manufacturer = Column(String)
     user_id = Column(String)
+    properties = Column(JSON)
+    

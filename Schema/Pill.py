@@ -20,6 +20,7 @@ class PillUpdate(BaseModel):
 
 class Pill(PillBase):
     id: int
+    properties: list
 
     class Config:
         orm_mode = True

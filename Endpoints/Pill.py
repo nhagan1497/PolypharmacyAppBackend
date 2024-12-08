@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from base import get_db
 from PIL import Image
 import io
+import requests
 
 import Crud.Pill as PillCrud
 import Schema.Pill as PillSchema
@@ -26,15 +27,23 @@ async def create_pill(
         raise HTTPException(status_code=400, detail="Uploaded file is not an image")
     image_data = await image.read()
     try:
-        # Optional: You can validate the image content here (e.g., using PIL)
-        img = Image.open(io.BytesIO(image_data))
-        img.verify()  # Ensure it's a valid image
+        url = "http://18.219.9.33:8000/process-image"
+        api_key = "11223344"
+        headers = {"api_key": api_key}
+
+        response = requests.post(url, params=headers, files={"image": ('image.jpg', image_data, 'image/jpeg')})
+
+        print(response.status_code)
+        if response.status_code == 200:
+            pill_properties = sorted(response.json(), key=lambda x: len(x), reverse=True)[0]
+        else:
+            response.raise_for_status()
     except Exception as e:
-        raise HTTPException(status_code=400, detail="Invalid image file")
+        raise HTTPException(status_code=400, detail="Error adding pill")
     db_pill = PillCrud.get_pill_by_name(db, name=pill.name, user_id=user_id)
     if db_pill:
         raise HTTPException(status_code=400, detail="Pill with this name already exists")
-    return PillCrud.create_pill(db=db, pill=pill, user_id=user_id)
+    return PillCrud.create_pill(db=db, pill=pill, user_id=user_id, pill_properties=pill_properties)
 
 
 @pill_router.get("/{pill_id}", response_model=PillSchema.Pill)
@@ -73,9 +82,7 @@ async def identify_pill_image(image: UploadFile, db=Depends(get_db), user_id=Dep
         raise HTTPException(status_code=400, detail="Uploaded file is not an image")
     image_data = await image.read()
     try:
-        # Optional: You can validate the image content here (e.g., using PIL)
         img = Image.open(io.BytesIO(image_data))
-        img.verify()  # Ensure it's a valid image
     except Exception as e:
         raise HTTPException(status_code=400, detail="Invalid image file")
 

@@ -5,8 +5,8 @@ from Schema.Pill import PillCreate, PillUpdate
 from sqlalchemy import or_
 
 
-def create_pill(db: Session, pill: PillCreate, user_id: str = None):
-    db_pill = PillDB(**pill.dict(), user_id=user_id)
+def create_pill(db: Session, pill: PillCreate, pill_properties=None, user_id: str = None):
+    db_pill = PillDB(**pill.dict(), user_id=user_id, properties=list(set(pill_properties)))
     db.add(db_pill)
     db.commit()
     db.refresh(db_pill)
