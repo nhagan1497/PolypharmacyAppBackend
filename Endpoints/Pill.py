@@ -35,7 +35,10 @@ async def create_pill(
 
         print(response.status_code)
         if response.status_code == 200:
-            pill_properties = sorted(response.json(), key=lambda x: len(x), reverse=True)[0]
+            if not response.json():
+                pill_properties = []
+            else:
+                pill_properties = sorted(response.json(), key=lambda x: len(x), reverse=True)[0]
         else:
             response.raise_for_status()
     except Exception as e:
